@@ -9,7 +9,7 @@
       <hr/>
       <add-payment-form @addPayment="add"/>
         <payments-display :items="currentElements" />
-      <pagination :length="paymentsList.length" :cur="curPage" :n="n" @paginate="onChangePage"/>
+      <pagination :length="12" :cur="curPage" :n="3" @paginate="onChangePage"/>
     </main>
    
   </div>
@@ -48,7 +48,7 @@ return {
       return this.$store.getters.getPaymentList
     },
    currentElements(){
-      return this.paymentsList.slice(this.n * (this.curPage - 1), this.n * (this.curPage - 1) + this.n)
+      return this.paymentsList.slice(3 * (this.curPage - 1), 3 * (this.curPage - 1) + 3)
       }
   },
   methods:{

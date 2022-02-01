@@ -31,11 +31,20 @@ export default new Vuex.Store({
   state: {
 
     paymentsList: [],
+    paymentListIDS: [],
+
     categoryList: []
   },
   mutations: {
+   
     setPamentsListData(state, payload){
-      state.paymentsList = payload
+      //state.paymentsList = payload
+      const newUniqObjs = payload.filter(obj=>{
+        return state.paymentListIDS.indexOf(obj.id) < 0
+      })
+     const uniqIds = newUniqObjs.map(obj=>obj.id)
+     state.paymentListIDS.push(...uniqIds)
+     state.paymentsList.push(...newUniqObjs)
     },
     addDataToPaymentsList(state, data){
       state.paymentsList.push(data)
@@ -50,25 +59,34 @@ export default new Vuex.Store({
     // }
   },
   actions: {
-    fetchData({commit}){
-      return new Promise((resolve)=>{
-        setTimeout(()=>{
-          const items= []
-          for(let i= 1; i< 101; i++){
-            items.push({
-              date: Date.now(),
-              category: 'Food',
-              id: i,
-              value: i
-            })
-          }
-          resolve(items)
-        }, 1500)
-      }).then(res=>{
-        commit('setPamentsListData', res)
-      })
+     fetchData({commit}, page){
+       return new Promise((resolve)=>{
+         setTimeout(()=>{
+          const items = localDB[`page${page}`]
+           resolve(items)
+         }, 1000)
+       })
+       .then(res=> commit('setPamentsListData', res))
+     },
+  //  fetchData({commit}){
+   //   return new Promise((resolve)=>{
+   //     setTimeout(()=>{
+    //      const items= []
+    //      for(let i= 1; i< 101; i++){
+     //       items.push({
+     //         date: Date.now(),
+     //         category: 'Food',
+     //         id: i,
+     //         value: i
+     //       })
+     //     }
+      //    resolve(items)
+      //  }, 1500)
+    //  }).then(res=>{
+    //    commit('setPamentsListData', res)
+     // })
    
-    },
+   // },
     loadCategories ({ commit }) {
       return new Promise((resolve) => {
         // имитируем работу с сетью
